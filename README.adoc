@@ -1,0 +1,122 @@
+= rmgt
+
+Linux and Windows Remote Management, 方便快捷的远程服务器连接工具
+
+== 平台
+支持 Linux(SSH) 以及 Windows(RDP) 远程连接
+
+.Linux
+* 支持证书登录
+* 支持密码登录
+
+.Windows
+* 仅支持密码登录
+
+== 编译安装
+
+----
+$ git clone https://github.com/fifilyu/rmgt.git
+$ mkdir rmgt_build
+$ cd rmgt_build
+$ cmake ../rmgt
+$ make
+$ make test
+$ cp bin/rmgt 任意路径 (比如，cp bin/rmgt /home/fifilyu/bin/rmgt)
+----
+
+[NOTE]
+建议将 rmgt 所在目录 (比如，/home/fifilyu/bin) 加入环境变量 `$PATH` ，以使任意位置都能找到 `rmgt` 命令。
+
+== 配置文件
+主机信息将会保存到当前用户主目录下，文件名为 `.rmgt.conf`。比如，/home/fifilyu/.rmgt.conf
+
+=== 安全
+rmgt 将以明文保存主机信息，包括 *密码* 。
+
+[NOTE]
+以后可能会采用 RSA 密钥 + 加密配置文件的方式保证安全。
+
+[WARNING]
+现在，如果你对安全问题非常敏感，请 *慎用* rmgt 。
+
+== 连接 Windows 主机的分辨率设置
+默认分辨率是 800 * 600。如果需要重置分辨率，请直接修改 main.cxx 中 `"-g800x600 "` 即可。
+
+== 用法
+
+使用前，请确认已经安装以下软件包:
+
+openssh:: SSH 协议工具集
+rdesktop:: Windows 远程桌面协议(RDP)客户端
+sshpass:: 非交互式 SSH 密码工具
+
+=== 增加主机
+
+==== Linux 平台
+*证书登录*
+
+`rmgt -n usa241 -o linux -i 142.4.114.xxx -p 22 -u root -d "美国代理线路"`
+
+or
+
+`rmgt -n usa241 -o linux -i 142.4.114.xxx`
+
+*密码登录*
+
+`rmgt -n usa241 -o linux -i 142.4.114.xxx -p 22 -u root -w password -d "美国代理线路"`
+
+or
+
+`rmgt -n usa241 -o linux -i 142.4.114.xxx -w password`
+
+==== Windows 平台
+*密码登录*
+
+`rmgt -n ali44 -o windows -i 121.41.45.xxx -p 3389 -u administrator -w password -d "阿里云"`
+
+or
+
+`rmgt -n ali44 -o windows -i 121.41.45.xxx`
+
+=== 连接主机
+
+Linux: 必须在终端下执行 `rmgt -c usa241`
+
+Windows: 在终端或者 X 桌面下执行 `rmgt -c ali44`
+
+=== 删除主机
+
+`rmgt -r usa241`
+
+`rmgt -r ali44`
+
+== 使用详情
+请 `rmgt -h` 查看帮助
+
+----
+rmgt(remote management) v2.0.1 - 方便快捷的远程服务器连接工具
+
+用法 :
+	rmgt -V
+	rmgt -c <主机名> [-v]
+	rmgt -l
+	rmgt -s <主机名>
+	rmgt -r <主机名>
+	rmgt -n <主机名> -o <操作系统> -i <IP地址> -p [远程端口[22|3389]] -u [用户名[root|administrator]] -w [密码] -d [描述]
+
+参数 :
+	-c <主机名>		将连接的主机名
+	-l 			显示所有主机信息
+	-s <主机名>		显示指定主机信息
+	-r <主机名>		从配置文件删除主机
+	-n <主机名>		增加主机时，设置主机名
+	-o <操作系统>		增加主机时，设置操作系统，可选值：linux windows
+	-i <IP地址>		增加主机时，设置IP地址
+	-p [远程端口]		增加主机时，设置远程端口，linux 默认值：22，windows 默认值：3389
+	-u [用户名]		增加主机时，设置远程登录用户名，linux 默认值：root，windows 默认值：administrator
+	-w [密码]		增加主机时，设置密码，默认值：空
+	-d [描述]		增加主机时，设置描述，默认值：空
+	-h <显示帮助信息>	显示帮助信息
+	-v <显示连接信息>	显示连接信息
+	-V <显示版本信息>	显示版本信息
+----

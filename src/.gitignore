@@ -1,0 +1,6 @@
+.git
+.project
+.cproject
+*.swp
+Debug/*
+build/*
