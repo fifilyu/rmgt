@@ -13,6 +13,10 @@ Linux and Windows Remote Management, 方便快捷的远程服务器连接工具
 * 仅支持密码登录
 
 == 编译安装
+=== 安装 Google Test
+ArchLinux:: sudo pacman -S gtest
+Ubuntu:: sudo apt-get install libgtest-dev
+CentOS:: sudo yum install gtest-devel (需要 EPEL 源)
 
 ----
 $ git clone https://github.com/fifilyu/rmgt.git
@@ -44,11 +48,16 @@ rmgt 将以明文保存主机信息，包括 *密码* 。
 
 == 用法
 
-使用前，请确认已经安装以下软件包:
-
+=== 安装软件包
+.说明
 openssh:: SSH 协议工具集
 rdesktop:: Windows 远程桌面协议(RDP)客户端
 sshpass:: 非交互式 SSH 密码工具
+
+.安装软件
+ArchLinux:: sudo pacman -S openssh rdesktop sshpass
+Ubuntu:: sudo apt-get install openssh-client rdesktop sshpass
+CentOS:: sudo yum install openssh-clients rdesktop sshpass (需要 EPEL 源)
 
 === 增加主机
 
