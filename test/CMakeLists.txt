@@ -3,7 +3,7 @@ ADD_EXECUTABLE(common_unittest
     common_unittest.cxx
     ../src/common.cxx)
 
-TARGET_LINK_LIBRARIES(common_unittest gtest gtest_main)
+TARGET_LINK_LIBRARIES(common_unittest gtest gtest_main pthread)
 
 ADD_EXECUTABLE(HostCtx_unittest 
     gtest_main.cc
@@ -12,4 +12,4 @@ ADD_EXECUTABLE(HostCtx_unittest
     ../src/HostCtx.cxx
     ../src/common.cxx)
 
-TARGET_LINK_LIBRARIES(HostCtx_unittest gtest gtest_main)
+TARGET_LINK_LIBRARIES(HostCtx_unittest gtest gtest_main pthread)
