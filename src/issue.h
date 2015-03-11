@@ -12,7 +12,7 @@
 #define PACKAGE "rmgt"
 
 // Version number of package
-#define VERSION "v2.0.1"
+#define VERSION "v2.0.2"
 
 #define DESC "方便快捷的远程服务器连接工具"
 
