@@ -108,7 +108,7 @@ void conn_host(const string cfg_file, const string &id_, bool verbase) {
         cmd_ = "ssh -p" + host_->Port() + " " + host_->UserName() + "@" + host_->IPAddress();
 
         if (host_->Password().size())
-            cmd_ = "sshpass -p " + host_->Password() + " " + cmd_;
+            cmd_ = "sshpass -p '" + host_->Password() + "' " + cmd_;
 
         if (verbase)
             cmd_ += " -v";
