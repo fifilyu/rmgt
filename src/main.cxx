@@ -90,7 +90,7 @@ void conn_host(const string cfg_file, const string &id_, bool verbase) {
         }
 
         cmd_ = "rdesktop "
-                "-T'" + host_->IPAddress() + "' "
+                "-T'主机名: " + host_->ID() + ", IP地址:" + host_->IPAddress() + ", 端口:" + host_->Port() + "' "
                 "-u" + host_->UserName() + " "
                   // 使用单引号防止特殊字符被shell当做命令执行
                 "-p'" + host_->Password() + "' "
