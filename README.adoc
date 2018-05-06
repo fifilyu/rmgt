@@ -16,7 +16,7 @@ Linux and Windows Remote Management, 方便快捷的远程服务器连接工具
 === 安装 Google Test
 ArchLinux:: sudo pacman -S gtest
 Ubuntu:: sudo apt-get install libgtest-dev
-CentOS:: sudo yum install gtest-devel (需要 EPEL 源)
+CentOS:: sudo yum install epel-release && sudo yum install gtest-devel
 
 ----
 $ git clone https://github.com/fifilyu/rmgt.git
@@ -29,16 +29,13 @@ $ cp bin/rmgt 任意路径 (比如，cp bin/rmgt /home/fifilyu/bin/rmgt)
 ----
 
 [NOTE]
-建议将 rmgt 所在目录 (比如，/home/fifilyu/bin) 加入环境变量 `$PATH` ，以使任意位置都能找到 `rmgt` 命令。
+建议将 rmgt 所在目录 (比如，/home/fifilyu/bin) 加入环境变量 `$PATH` ，也可直接复制到 `/usr/local/bin`，以使任意位置都能找到 `rmgt` 命令。
 
 == 配置文件
 主机信息将会保存到当前用户主目录下，文件名为 `.rmgt.conf`。比如，/home/fifilyu/.rmgt.conf
 
 === 安全
 rmgt 将以明文保存主机信息，包括 *密码* 。
-
-[NOTE]
-以后可能会采用 RSA 密钥 + 加密配置文件的方式保证安全。
 
 [WARNING]
 现在，如果你对安全问题非常敏感，请 *慎用* rmgt 。
