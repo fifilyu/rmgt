@@ -16,7 +16,7 @@ Linux and Windows Remote Management, 方便快捷的远程服务器连接工具
 === 安装 Google Test
 ArchLinux:: sudo pacman -S gtest sshpass openssl
 Ubuntu:: sudo apt-get install libgtest-dev libssl-dev sshpass
-Ubuntu 18.04::sudo apt-get install googletest libssl-dev sshpass
+Ubuntu 18.04:: sudo apt-get install googletest libssl-dev sshpass
 CentOS:: sudo yum install epel-release && sudo yum install gtest-devel sshpass openssl-devel
 
 ----
