@@ -24,6 +24,7 @@ CentOS:: sudo yum install epel-release && sudo yum install cmake gcc-c++ gtest-d
 mkdir /tmp/gtest_build
 cd /tmp/gtest_build
 cmake /usr/src/googletest/googletest/
+make
 sudo cp libgtest.a libgtest_main.a /usr/local/lib/
 cd ~
 rm -rf /tmp/gtest_build
