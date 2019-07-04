@@ -19,6 +19,17 @@ Ubuntu:: sudo apt-get install cmake g++ libgtest-dev libssl-dev sshpass
 Ubuntu 18.04:: sudo apt-get install cmake g++ googletest libssl-dev sshpass
 CentOS:: sudo yum install epel-release && sudo yum install cmake gcc-c++ gtest-devel sshpass openssl-devel
 
+.Ubuntu平台需要手动解决单元测试依赖
+----
+mkdir /tmp/gtest_build
+cd /tmp/gtest_build
+cmake /usr/src/googletest/googletest/
+sudo cp libgtest.a libgtest_main.a /usr/local/lib/
+cd ~
+rm -rf /tmp/gtest_build
+----
+
+.编译rmgt
 ----
 $ git clone https://github.com/fifilyu/rmgt.git
 $ mkdir rmgt_build
