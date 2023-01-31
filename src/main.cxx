@@ -1,20 +1,31 @@
-/*
- * main.cxx
- *
- *  Created on: 2012年4月21日
- *      Author: Fifi Lyu
- */
+// The MIT License (MIT)
+//
+// Copyright (c) 2023 Fifi Lyu
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+//         of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+//         to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//         copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+//         copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//         AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #include "common.h"
 #include "issue.h"
 #include "HostCtx.h"
-#include <openssl/ssl.h>
-#include <openssl/err.h>
 #include <pwd.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include <cstdlib>
-#include <cstdio>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -25,27 +36,27 @@ using std::endl;
 using std::stringstream;
 
 void add_host(
-        const string cfg_file,
+        const string& cfg_file,
         const string &id, const string &os, const string &ip,
         const string &port, const string &passwd,
         const string &usr, const string &desc);
 
-void conn_host(const string cfg_file, const string &id_, bool verbase);
+void conn_host(const string& cfg_file, const string &id_, bool verbase);
 
-void del_host(const string cfg_file, const string &id_);
+void del_host(const string& cfg_file, const string &id_);
 
-void show_all_host(const string cfg_file);
+void show_all_host(const string& cfg_file);
 
 void show_host(HostPtr_t host);
 
-void show_host(const string cfg_file, const string &id);
+void show_host(const string& cfg_file, const string &id);
 
 void show_version();
 
 void usage();
 
 void add_host(
-        const string cfg_file,
+        const string& cfg_file,
         const string &id, const string &os, const string &ip,
         const string &port, const string &passwd,
         const string &usr, const string &desc) {
@@ -74,14 +85,14 @@ void add_host(
     cout << "成功......增加或更新主机" << endl;
 }
 
-void conn_host(const string cfg_file, const string &id_, bool verbase) {
+void conn_host(const string& cfg_file, const string &id_, bool verbase) {
     HostCtx host_ctx_(cfg_file);
     host_ctx_.load();
     HostPtr_t host_ = host_ctx_.get_host(id_);
 
     show_host(host_);
 
-    string cmd_("");
+    string cmd_;
 
     if (host_->OS() == "windows") {
         if (host_->UserName().empty() || host_->Password().empty()) {
@@ -90,15 +101,16 @@ void conn_host(const string cfg_file, const string &id_, bool verbase) {
         }
 
         cmd_ = "rdesktop "
-                "-T'主机名: " + host_->ID() + ", IP地址:" + host_->IPAddress() + ", 端口:" + host_->Port() + "' "
-                "-u" + host_->UserName() + " "
-                  // 使用单引号防止特殊字符被shell当做命令执行
-                "-p'" + host_->Password() + "' "
-                "-a 16 "
-                "-g800x600 "
-                "-rsound:off "
-                "-rclipboard:PRIMARYCLIPBOARD "
-                "-5 " + host_->IPAddress() + ":" + host_->Port();
+               "-T'主机名: " + host_->ID() + ", IP地址:" + host_->IPAddress() + ", 端口:" + host_->Port() + "' "
+                                                                                                            "-u" +
+               host_->UserName() + " "
+                                   // 使用单引号防止特殊字符被shell当做命令执行
+                                   "-p'" + host_->Password() + "' "
+                                                               "-a 16 "
+                                                               "-g800x600 "
+                                                               "-rsound:off "
+                                                               "-rclipboard:PRIMARYCLIPBOARD "
+                                                               "-5 " + host_->IPAddress() + ":" + host_->Port();
     } else if (host_->OS() == "linux") {
         if (host_->UserName().empty()) {
             cerr << "[Error] Linux 主机用户名为空，不能执行远程连接" << endl;
@@ -107,7 +119,7 @@ void conn_host(const string cfg_file, const string &id_, bool verbase) {
 
         cmd_ = "ssh -p" + host_->Port() + " " + host_->UserName() + "@" + host_->IPAddress();
 
-        if (host_->Password().size())
+        if (!host_->Password().empty())
             cmd_ = "sshpass -p '" + host_->Password() + "' " + cmd_;
 
         if (verbase)
@@ -117,14 +129,14 @@ void conn_host(const string cfg_file, const string &id_, bool verbase) {
         exit(EXIT_FAILURE);
     }
 
-    if (cmd_.size()) {
+    if (!cmd_.empty()) {
         cout << "远程主机连接中......" << endl;
         const int ret_ = system(cmd_.c_str());
         exit(ret_ ? EXIT_SUCCESS : EXIT_FAILURE);
     }
 }
 
-void del_host(const string cfg_file, const string &id_) {
+void del_host(const string& cfg_file, const string &id_) {
     HostCtx host_ctx_(cfg_file);
     host_ctx_.load();
     HostPtr_t host_ = host_ctx_.get_host(id_);
@@ -137,7 +149,7 @@ void del_host(const string cfg_file, const string &id_) {
     cout << "成功......删除主机" << endl;
 }
 
-void show_all_host(const string cfg_file) {
+void show_all_host(const string& cfg_file) {
     HostCtx host_ctx_(cfg_file);
     host_ctx_.load();
     HostPtrMap_t &host_list_ = host_ctx_.host_list();
@@ -145,21 +157,18 @@ void show_all_host(const string cfg_file) {
     HostPtr_t host_;
 
     cout << "主机名\t\t" << "IP地址" << endl;
-    for (HostPtrMap_t::iterator it_ = host_list_.begin(); it_ != host_list_.end(); it_++) {
-        host_ = it_->second;
-        cout
-            << host_->ID()
-            << "\t\t"
-            << host_->IPAddress()
-            << endl;
+
+    for (auto & it_ : host_list_) {
+        host_ = it_.second;
+        cout << host_->ID() << "\t\t" << host_->IPAddress() << endl;
     }
 }
 
-void show_host(const string cfg_file, const string &id) {
+void show_host(const string& cfg_file, const string &id) {
     HostCtx host_ctx_(cfg_file);
     host_ctx_.load();
     HostPtr_t host_ = host_ctx_.get_host(id);
-    show_host( host_);
+    show_host(host_);
 }
 
 void show_host(HostPtr_t host) {
@@ -175,7 +184,7 @@ void show_host(HostPtr_t host) {
     else
         cout << "    密码: **********" << endl;
 
-    cout << "    描述: " << (host->Description() == NONE_VALUE ? "" : host->Description())<< endl;
+    cout << "    描述: " << (host->Description() == NONE_VALUE ? "" : host->Description()) << endl;
     cout << endl;
 }
 
@@ -193,7 +202,7 @@ void usage() {
     usage_ << "\trmgt -s <主机名>" << endl;
     usage_ << "\trmgt -r <主机名>" << endl;
     usage_ << "\trmgt -n <主机名> -o <操作系统> -i <IP地址> "
-            "-p [远程端口[22|3389]] -u [用户名[root|administrator]] -w [密码] -d [描述]" << endl;
+              "-p [远程端口[22|3389]] -u [用户名[root|administrator]] -w [密码] -d [描述]" << endl;
     usage_ << endl;
     usage_ << "参数 :" << endl;
     usage_ << "\t-c <主机名>\t\t将连接的主机名" << endl;
@@ -205,7 +214,7 @@ void usage() {
     usage_ << "\t-i <IP地址>\t\t增加主机时，设置IP地址" << endl;
     usage_ << "\t-p [远程端口]\t\t增加主机时，设置远程端口，linux 默认值：22，windows 默认值：3389" << endl;
     usage_ << "\t-u [用户名]\t\t增加主机时，设置远程登录用户名，"
-            "linux 默认值：root，windows 默认值：administrator" << endl;
+              "linux 默认值：root，windows 默认值：administrator" << endl;
     usage_ << "\t-w [密码]\t\t增加主机时，设置密码，默认值：空" << endl;
     usage_ << "\t-d [描述]\t\t增加主机时，设置描述，默认值：空" << endl;
     usage_ << "\t-h <显示帮助信息>\t显示帮助信息" << endl;
@@ -215,7 +224,7 @@ void usage() {
     cout << usage_.str();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     show_version();
 
     struct passwd *pw_ = getpwuid(getuid());
@@ -233,15 +242,15 @@ int main(int argc, char* argv[]) {
     string p_id_for_del_;
 
     bool is_show_list_ = false;
-    string p_id_for_show_("");
+    string p_id_for_show_;
 
-    string p_id_("");
-    string p_os_("");
-    string p_ip_("");
-    string p_port_("");
-    string p_passwd_("");
-    string p_usr_("");
-    string p_desc_("");
+    string p_id_;
+    string p_os_;
+    string p_ip_;
+    string p_port_;
+    string p_passwd_;
+    string p_usr_;
+    string p_desc_;
 
     bool verbase_ = false;
 
@@ -314,13 +323,13 @@ int main(int argc, char* argv[]) {
     try {
         if (is_show_list_)
             show_all_host(cfg_file_);
-        else if (p_id_for_show_.size())
+        else if (!p_id_for_show_.empty())
             show_host(cfg_file_, p_id_for_show_);
-        else if (p_id_for_conn_.size())
+        else if (!p_id_for_conn_.empty())
             conn_host(cfg_file_, p_id_for_conn_, verbase_);
-        else if (p_id_for_del_.size())
+        else if (!p_id_for_del_.empty())
             del_host(cfg_file_, p_id_for_del_);
-        else if (p_id_.size() && p_os_.size() && p_ip_.size())
+        else if (!p_id_.empty() && !p_os_.empty() && !p_ip_.empty())
             add_host(cfg_file_, p_id_, p_os_, p_ip_, p_port_, p_passwd_, p_usr_, p_desc_);
         else {
             usage();

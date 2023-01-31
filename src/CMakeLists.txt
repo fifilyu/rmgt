@@ -4,14 +4,13 @@ SET(Common_INC "${PROJECT_SOURCE_DIR}/../includes")
 
 INCLUDE_DIRECTORIES(${Common_INC})
 
-SET(SRC_LIST 
-    main.cxx
-    common.cxx
-    Host.cxx
-    HostCtx.cxx
-)
+SET(SRC_LIST
+        main.cxx
+        common.cxx
+        Host.cxx
+        HostCtx.cxx)
 
-ADD_EXECUTABLE(${PROGRAM_NAME}  ${SRC_LIST})
+ADD_EXECUTABLE(${PROGRAM_NAME} ${SRC_LIST})
 TARGET_LINK_LIBRARIES(${PROGRAM_NAME})
 
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/release)

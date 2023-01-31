@@ -1,16 +1,31 @@
-/*
- * HostCtx.cxx
- *
- *  Created on: 2015年3月2日
- *      Author: Fifi Lyu
- */
+// The MIT License (MIT)
+//
+// Copyright (c) 2023 Fifi Lyu
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+//         of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+//         to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//         copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+//         copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//         AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #include "HostCtx.h"
 #include "common.h"
-#include <sstream>
 #include <exception>
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 using std::cout;
 using std::endl;
@@ -18,29 +33,14 @@ using std::exception;
 using std::istringstream;
 using std::ifstream;
 
-HostCtx::KeyNameDescMap_t HostCtx::m_key_name_desc_map = HostCtx::crt_KeyNameDescMap();
 HostCtx::DescKeyNameMap_t HostCtx::m_desc_key_name_map = HostCtx::crt_DescKeyNameMap();
 
-HostCtx::HostCtx(const string &cfg_file) : m_cfg_file(cfg_file) {
+HostCtx::HostCtx(string cfg_file) : m_cfg_file(std::move(cfg_file)) {
 
 }
 
 HostCtx::~HostCtx() {
     delete_all_host_obj();
-}
-
-HostCtx::KeyNameDescMap_t HostCtx::crt_KeyNameDescMap() {
-    KeyNameDescMap_t key_name_desc_map_;
-
-    key_name_desc_map_[KN_Host] = "Host";
-    key_name_desc_map_[KN_OS] = "OS";
-    key_name_desc_map_[KN_IPAddress] = "IPAddress";
-    key_name_desc_map_[KN_Port] = "Port";
-    key_name_desc_map_[KN_UserName] = "UserName";
-    key_name_desc_map_[KN_Password] = "Password";
-    key_name_desc_map_[KN_Description] = "Description";
-
-    return key_name_desc_map_;
 }
 
 HostCtx::DescKeyNameMap_t HostCtx::crt_DescKeyNameMap() {
@@ -58,7 +58,7 @@ HostCtx::DescKeyNameMap_t HostCtx::crt_DescKeyNameMap() {
 }
 
 void HostCtx::validate_key(const string &s) {
-    DescKeyNameMap_t::iterator it_ = m_desc_key_name_map.find(s);
+    auto it_ = m_desc_key_name_map.find(s);
 
     if (it_ == m_desc_key_name_map.end())
         throw common::MException(s + ": unknown directive");
@@ -70,19 +70,17 @@ HostCtx::KeyName_t HostCtx::to_keyname(const string &s) {
 }
 
 void HostCtx::delete_all_host_obj() {
-    for (HostPtrMap_t::iterator it_ = m_host_list.begin();
-            it_ != m_host_list.end(); ++it_) {
-        HostPtr_t host_ = it_->second;
+    for (auto & it_ : m_host_list) {
+        HostPtr_t host_ = it_.second;
 
-        if (host_)
-            delete host_;
+        delete host_;
     }
 }
 
 void HostCtx::parse_line(string &line) {
     static HostPtr_t host;
-    string key_("");
-    string value_("");
+    string key_;
+    string value_;
 
     line = common::trim(line);
 
@@ -102,7 +100,7 @@ void HostCtx::parse_line(string &line) {
 
     if (kn_ == KN_Host) {
         host = new Host();
-        const string id_(value_);
+        const string& id_(value_);
         m_host_list[id_] = host;
     }
 
@@ -134,8 +132,7 @@ void HostCtx::parse_line(string &line) {
 }
 
 void HostCtx::load() {
-    HostPtr_t host_;
-    string line_("");
+    string line_;
 
     // 如果配置文件不存在，则建立空文件
     if (!common::is_file_exist(m_cfg_file))
@@ -146,7 +143,7 @@ void HostCtx::load() {
     if (!infile_)
         throw common::MException("cannot open \"" + m_cfg_file + "\".");
 
-    while(getline(infile_, line_)) {
+    while (getline(infile_, line_)) {
         try {
             parse_line(line_);
         } catch (common::MException &e) {
@@ -173,10 +170,10 @@ string HostCtx::dump(HostPtr_t host) {
 }
 
 string HostCtx::dump() {
-    string cfg_("");
+    string cfg_;
 
-    for (HostPtrMap_t::iterator it_ = m_host_list.begin();
-            it_ != m_host_list.end(); ++it_) {
+    for (auto it_ = m_host_list.begin();
+         it_ != m_host_list.end(); ++it_) {
         // 最后一个
         if (it_ == --m_host_list.end())
             cfg_ += dump(it_->second);
@@ -187,7 +184,7 @@ string HostCtx::dump() {
     return cfg_;
 }
 
-HostPtrMap_t& HostCtx::host_list() {
+HostPtrMap_t &HostCtx::host_list() {
     return m_host_list;
 }
 
@@ -249,7 +246,7 @@ void HostCtx::add_host(HostPtr_t host) {
 }
 
 void HostCtx::del_host(const string &id) {
-    HostPtrMap_t::iterator it_ = m_host_list.find(id);
+    auto it_ = m_host_list.find(id);
 
     if (it_ != m_host_list.end())
         m_host_list.erase(it_);

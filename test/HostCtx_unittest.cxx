@@ -1,9 +1,24 @@
-/*
- * HostCtx_unittest.cxx
- *
- *  Created on: 2015年3月4日
- *      Author: Fifi Lyu
- */
+// The MIT License (MIT)
+//
+// Copyright (c) 2023 Fifi Lyu
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+//         of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+//         to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//         copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+//         copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//         AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #include <gtest/gtest.h>
 #include "../src/HostCtx.h"
@@ -14,58 +29,58 @@ using std::cout;
 using std::endl;
 
 const string g_cfg(
-    "Host server1\n"
-    "    OS windows\n"
-    "    IPAddress 1.1.1.1\n"
-    "    Port 3389\n"
-    "    UserName administrator1\n"
-    "    Password saung8aenighaeGhahla\n"
-    "    Description test server1\n"
-    "\n"
-    "Host server2\n"
-    "    OS windows\n"
-    "    IPAddress 2.2.2.2\n"
-    "    Port 3389\n"
-    "    UserName administrator2\n"
-    "    Password fi5ieph3vaith5ooZie5\n"
-    "    Description test server2\n"
+        "Host server1\n"
+        "    OS windows\n"
+        "    IPAddress 1.1.1.1\n"
+        "    Port 3389\n"
+        "    UserName administrator1\n"
+        "    Password saung8aenighaeGhahla\n"
+        "    Description test server1\n"
+        "\n"
+        "Host server2\n"
+        "    OS windows\n"
+        "    IPAddress 2.2.2.2\n"
+        "    Port 3389\n"
+        "    UserName administrator2\n"
+        "    Password fi5ieph3vaith5ooZie5\n"
+        "    Description test server2\n"
 );
 
 const string g_cfg1(
-    "Host server1\n"
-    "    OS windows\n"
-    "    IPAddress 1.1.1.1\n"
-    "    Port 3389\n"
-    "    UserName administrator1\n"
-    "    testkey testvalue\n"
-    "    Password saung8aenighaeGhahla\n"
-    "    Description test server1\n"
-    "\n"
-    "Host server2\n"
-    "    OS windows\n"
-    "    IPAddress 2.2.2.2\n"
-    "    Port 3389\n"
-    "    UserName administrator2\n"
-    "    Password fi5ieph3vaith5ooZie5\n"
-    "    Description test server2\n"
+        "Host server1\n"
+        "    OS windows\n"
+        "    IPAddress 1.1.1.1\n"
+        "    Port 3389\n"
+        "    UserName administrator1\n"
+        "    testkey testvalue\n"
+        "    Password saung8aenighaeGhahla\n"
+        "    Description test server1\n"
+        "\n"
+        "Host server2\n"
+        "    OS windows\n"
+        "    IPAddress 2.2.2.2\n"
+        "    Port 3389\n"
+        "    UserName administrator2\n"
+        "    Password fi5ieph3vaith5ooZie5\n"
+        "    Description test server2\n"
 );
 
 const string g_cfg2(
-    "Host server1\n"
-    "    OS windows\n"
-    "    IPAddress 1.1.1.1\n"
-    "    Port 3389\n"
-    "    Useradministrator1\n"
-    "    Password saung8aenighaeGhahla\n"
-    "    Description test server1\n"
-    "\n"
-    "Host server2\n"
-    "    OS windows\n"
-    "    IPAddress 2.2.2.2\n"
-    "    Port 3389\n"
-    "    UserName administrator2\n"
-    "    Password fi5ieph3vaith5ooZie5\n"
-    "    Description test server2\n"
+        "Host server1\n"
+        "    OS windows\n"
+        "    IPAddress 1.1.1.1\n"
+        "    Port 3389\n"
+        "    Useradministrator1\n"
+        "    Password saung8aenighaeGhahla\n"
+        "    Description test server1\n"
+        "\n"
+        "Host server2\n"
+        "    OS windows\n"
+        "    IPAddress 2.2.2.2\n"
+        "    Port 3389\n"
+        "    UserName administrator2\n"
+        "    Password fi5ieph3vaith5ooZie5\n"
+        "    Description test server2\n"
 );
 
 const string g_cfg_file("rmgt.conf");
@@ -105,7 +120,7 @@ TEST(HostCtxTest, host_list_and_host_size) {
     HostPtrMap_t &host_list_ = host_ctx_.host_list();
     EXPECT_EQ(2, host_list_.size());
 
-    if (host_list_.size() != 2 )
+    if (host_list_.size() != 2)
         return;
 
     HostPtr_t host_ = host_list_.begin()->second;
@@ -143,7 +158,7 @@ TEST(HostCtxTest, dump) {
 
 TEST(HostCtxTest, xxx_host) {
     HostCtx host_ctx_(g_cfg_file);
-    HostPtr_t host_ = new Host();
+    auto host_ = new Host();
 
     host_->setID("host1");
     host_->setOS("linux");
