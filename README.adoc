@@ -32,13 +32,13 @@ rm -rf /tmp/gtest_build
 
 .编译rmgt
 ----
-$ git clone https://github.com/fifilyu/rmgt.git
-$ mkdir rmgt_build
-$ cd rmgt_build
-$ cmake ../rmgt
-$ make
-$ make test
-$ cp bin/rmgt 任意路径 (比如，cp bin/rmgt /home/fifilyu/bin/rmgt)
+git clone https://github.com/fifilyu/rmgt.git
+mkdir rmgt_build
+cd rmgt_build
+cmake ../rmgt
+make
+make test
+cp bin/rmgt 任意路径 (比如，cp bin/rmgt /home/fifilyu/bin/rmgt)
 ----
 
 [NOTE]
