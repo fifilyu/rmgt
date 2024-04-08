@@ -106,7 +106,7 @@ void conn_host(const string& cfg_file, const string &id_, bool verbase) {
                // 使用单引号防止特殊字符被shell当做命令执行
                "-p'" + host_->Password() + "' "
                "-a 16 "
-               "-g800x600 "
+               "-g1920x1080 "
                "-rsound:off "
                "-rclipboard:PRIMARYCLIPBOARD "
                "-5 " + host_->IPAddress() + ":" + host_->Port();
