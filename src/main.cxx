@@ -107,7 +107,7 @@ void conn_host(const string& cfg_file, const string &id_, bool verbase) {
                "-p'" + host_->Password() + "' "
                "-a 16 "
                "-g1920x1080 "
-               "-rsound:off "
+               "-rsound:local "
                "-rclipboard:PRIMARYCLIPBOARD "
                "-5 " + host_->IPAddress() + ":" + host_->Port();
     } else if (host_->OS() == "linux") {
